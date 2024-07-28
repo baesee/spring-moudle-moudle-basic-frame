@@ -1,0 +1,11 @@
+pluginManagement {
+    repositories {
+        maven { url 'https://repo.spring.io/snapshot' }
+        gradlePluginPortal()
+    }
+}
+rootProject.name = 'odos-moudle'
+include 'boot-api'
+include 'boot-admin'
+include 'data-core'
+include 'global-common'

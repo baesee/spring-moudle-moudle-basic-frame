@@ -1,0 +1,40 @@
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      pool-name: odos-hikari-pool
+  jpa:
+    hibernate:
+      ddl-auto: none  # option type: create, create-drop, update, validate, none
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE_ENV:local} # 환경변수에 설정된 값으로 세부 프로파일 값 호출('local','release','prod')
+  servlet:
+    multipart: # 파일 업로드 용량 설정
+      max-file-size: 30MB
+      max-request-size: 30MB
+
+#################################### 공통 적용 영역 ####################################
+---
+
+spring:
+  config:
+    activate:
+      on-profile: local
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+
+

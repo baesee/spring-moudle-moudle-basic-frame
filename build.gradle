@@ -1,0 +1,37 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.2.9-SNAPSHOT'
+    id 'io.spring.dependency-management' version '1.1.6'
+}
+
+repositories {
+    mavenCentral()
+    maven { url 'https://repo.spring.io/snapshot' }
+}
+
+group = 'com.billlog'
+version = '0.0.1-SNAPSHOT'
+
+bootJar { enabled = false} // java -jar으로 실행 가능한 Executable Archive
+jar { enabled = true } // 실행 되지 않ㅇ는 Plain Archive
+
+subprojects { // 하위 모듈들에게 모두 적용된다
+    group = 'com.billlog'
+    version = '0.0.1'
+    sourceCompatibility = '17'
+
+    apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies { // 모든 하위 모듈에 공통적으로 추가 될 의존성
+        compileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
+    }
+}
+
+

@@ -1,0 +1,92 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      pool-name: odos-hikari-pool
+  jpa:
+    hibernate:
+      ddl-auto: none  # option type: create, create-drop, update, validate, none
+    properties:
+      hibernate:
+        show_sql: true  # sql 쿼리를 보여줍니다.
+        format_sql: true  # sql query formatting
+        use_sql_comments: true  # sql 쿼리의 추가정보를 보여줍니다.
+        default_batch_fetch_size: 100 #최적화 (LAZY(Colletcion 1:N) 조회시 IN 절에 담길 파라미터 개수)
+
+logging:
+  level:
+    root: info
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql: trace  # query의 ?에 어떤 값이 들어가는지 추적할 수 있는 설정입니다. TRACE Log에 값을 보여줍니다.
+
+#################################### 공통 적용 영역 ####################################
+---
+
+spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    url: jdbc:mysql://localhost:3306/odos?useUnicode=yes&characterEncoding=utf-8&serverTimezone=Asia/Seoul&rewriteBatchedStatements=true
+    username: root
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    url: jdbc:mysql://host.docker.internal:3306/odos?useUnicode=yes&characterEncoding=utf-8&serverTimezone=Asia/Seoul&rewriteBatchedStatements=true
+    username: root
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+  data:
+    redis:
+      host: odos-redis
+      port: 6379
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    url: jdbc:mysql://host.docker.internal:3306/odos?useUnicode=yes&characterEncoding=utf-8&serverTimezone=Asia/Seoul&rewriteBatchedStatements=true
+    username: root
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        show_sql: false
+        format_sql: false
+        use_sql_comments: false
+  data:
+    redis:
+      host: odos-redis
+      port: 6379
+
+logging:
+  level:
+    root: error
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql: off

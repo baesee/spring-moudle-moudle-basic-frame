@@ -1,0 +1,100 @@
+server:
+  port: 8080
+
+spring:
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE_ENV:local} # 환경변수에 설정된 값으로 세부 프로파일 값 호출('local','release','prod')
+    include:
+      - core
+
+springdoc:
+  api-docs:
+    path: /api-docs/odos
+    groups:
+      enabled: true
+  default-produces-media-type: application/json;charset=UTF-8
+  default-consumes-media-type: application/json;charset=UTF-8
+  swagger-ui:
+    operations-sorter: alpha # 메서드 순서 정렬
+    tags-sorter: alpha # 태그 정렬 구분자 (alpha : 알파벳 ,
+    path: /swagger-ui.html #스웨거 호출 패스
+    doc-expansion: none # 태그를 기본으로 닫힌 상태로 설정
+    enabled: true
+  cache:
+    disabled: true
+  packages-to-scan: com.billlog.api # 패키지 스캔 경로 ( 패키지, path 등등 가능 )
+
+app:
+  domain: http://localhost:${server.port}
+  basePath: /odos/api
+
+logging:
+  level:
+    root: info
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql: trace  # query의 ?에 어떤 값이 들어가는지 추적할 수 있는 설정입니다. TRACE Log에 값을 보여줍니다.
+
+#################################### 공통 적용 영역 ####################################
+---
+
+spring:
+  config:
+    activate:
+      on-profile: local
+
+jwt:
+  issuer: odos-local
+  secret: ${JWT_SECRET_KEY:I2z0LMldfheEL+F9NjNTE5tuPGI6iH3FciRMqzPR1tE=} # 32자 이상의 키값 필요
+  expire:
+    minute : ${ACCESSTOKEN_EXPIRE_MINUTE:10000}
+    day : ${REFRESHTOKEN_EXPIRE_DAY:60}
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+app:
+  domain: https://dev-api.ebull.co.kr
+
+jwt:
+  issuer: odos-dev
+  secret: ${JWT_SECRET_KEY:I2z0LMldfheEL+F9NjNTE5tuPGI6iH3FciRMqzPR1tE=}
+  expire:
+    minute : ${ACCESSTOKEN_EXPIRE_MINUTE:30}
+    day : ${REFRESHTOKEN_EXPIRE_DAY:60}
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+app:
+  domain: https://odos.co.kr
+
+jwt:
+  issuer: odos-prod
+  secret: ${JWT_SECRET_KEY:I2z0LMldfheEL+F9NjNTE5tuPGI6iH3FciRMqzPR1tE=}
+  expire:
+    minute : ${ACCESSTOKEN_EXPIRE_MINUTE:30}
+    day : ${REFRESHTOKEN_EXPIRE_DAY:60}
+
+springdoc:
+  swagger-ui:
+    enabled: false # Prod 환경에서는 swagger-ui.html 비노출
+
+logging:
+  level:
+    root: error
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql: off
